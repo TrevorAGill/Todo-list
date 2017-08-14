@@ -1,13 +1,16 @@
-package dao;
 
-import junit.framework.Assert;
+package dao;
+import dao.TaskDao;
+import dao.Sql2oTaskDao;
 import models.Task;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.sql2o.Connection;
 import org.sql2o.Sql2o;
 
-import java.sql.Connection;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,15 +59,44 @@ public class Sql2oTaskDaoTest {
 
     @Test
     public void noTasksAreFound() throws Exception {
-        assertEquals(null,taskDao.getAll());
+        List<Task> testList = new ArrayList<Task>();
+        assertEquals(testList,taskDao.getAll());
     }
 
     @Test
     public void allTasksAreFound() throws Exception {
         Task task = new Task ("mow the lawn");
         Task task2 = new Task ("sweep the floor");
+        taskDao.add(task);
+        taskDao.add(task2);
         assertEquals(2,taskDao.getAll().size());
     }
 
+    @Test
+    public void deleteASingleTask() throws Exception {
+        Task task = new Task("mow the lawn");
+        taskDao.add(task);
+        taskDao.deleteById(task.getId());
+        assertEquals(0, taskDao.getAll().size());
+    }
+
+    @Test
+    public void deleteAllTasks() throws Exception {
+        Task task = new Task("mow the lawn");
+        Task task2 = new Task("sweep the floor");
+        taskDao.add(task);
+        taskDao.add(task2);
+        taskDao.clearAllTasks();
+        assertEquals(0, taskDao.getAll().size());
+    }
+
+    @Test
+    public void updateASingleTask() throws Exception {
+        Task task = new Task("mow the lawn");
+        taskDao.add(task);
+        taskDao.update(task.getId(),"walk the dog");
+        Task updatedTask = taskDao.findById(task.getId());
+        assertEquals("walk the dog", updatedTask.getDescription());
+    }
 
 }

@@ -11,17 +11,23 @@ public interface TaskDao {
 
     //create
     void add (Task task);
+
     //read
     public List<Task> getAll();
 
+    //find
     Task findById(int id);
-    //update
-    //  void update(int id, String content);
-    //delete
-//   void deleteTask();
 
-//   void clearAllTasks();
+//    update
+     void update(int id, String content);
 
+//    delete
+//    void deleteTask(Task task);
+
+//  clear all tasks
+    void clearAllTasks();
+
+    void deleteById(int id);
 }
 
 
