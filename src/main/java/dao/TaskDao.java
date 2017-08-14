@@ -18,13 +18,10 @@ public interface TaskDao {
     //find
     Task findById(int id);
 
-//    update
-     void update(int id, String content);
+    //update
+    void update(int id, String content, int categoryId);
 
-//    delete
-//    void deleteTask(Task task);
-
-//  clear all tasks
+    //clear all tasks
     void clearAllTasks();
 
     void deleteById(int id);

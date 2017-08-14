@@ -94,7 +94,7 @@ public class Sql2oTaskDaoTest {
     public void updateASingleTask() throws Exception {
         Task task = new Task("mow the lawn");
         taskDao.add(task);
-        taskDao.update(task.getId(),"walk the dog");
+        taskDao.update(task.getId(),"walk the dog", 1);
         Task updatedTask = taskDao.findById(task.getId());
         assertEquals("walk the dog", updatedTask.getDescription());
     }
