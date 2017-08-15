@@ -1,27 +1,22 @@
 package models;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 
 public class Task {
 
     private String description;
-//    private static ArrayList<Task> instances = new ArrayList<>();
     private boolean completed;
     private LocalDateTime createdAt;
     private int id;
+    private int categoryId;
 
-    public Task(String description){
+    public Task(String description, int categoryId){
         this.setDescription(description);
         this.completed = false;
         this.createdAt = LocalDateTime.now();
-//        instances.add(this);
-//        this.setId(instances.size());
+        this.setCategoryId(getCategoryId());
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
 
     public void setId(int id) {
         this.id = id;
@@ -36,19 +31,28 @@ public class Task {
 
         if (completed != task.completed) return false;
         if (id != task.id) return false;
-        return description.equals(task.description);
+        if (categoryId != task.categoryId) return false;
+        if (!description.equals(task.description)) return false;
+        return createdAt != null ? createdAt.equals(task.createdAt) : task.createdAt == null;
     }
 
     @Override
     public int hashCode() {
         int result = description.hashCode();
         result = 31 * result + (completed ? 1 : 0);
+        result = 31 * result + (createdAt != null ? createdAt.hashCode() : 0);
         result = 31 * result + id;
+        result = 31 * result + categoryId;
         return result;
     }
 
+
     public String getDescription() {
         return this.description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public boolean getCompleted(){
@@ -61,5 +65,13 @@ public class Task {
 
     public int getId() {
         return this.id;
+    }
+
+    public int getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(int categoryId) {
+        this.categoryId = categoryId;
     }
 }

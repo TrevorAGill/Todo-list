@@ -2,6 +2,7 @@ package dao;
 
 import models.Task;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -19,7 +20,7 @@ public interface TaskDao {
     Task findById(int id);
 
     //update
-    void update(int id, String content, int categoryId);
+    void update(int id, String content);
 
     //clear all tasks
     void clearAllTasks();
