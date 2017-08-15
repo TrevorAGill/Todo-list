@@ -3,8 +3,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import dao.Sql2oCategoryDao;
 import dao.Sql2oTaskDao;
 import dao.TaskDao;
+import models.Category;
 import models.Task;
 import org.sql2o.Sql2o;
 import spark.ModelAndView;
@@ -17,6 +19,7 @@ public class App {
         String connectionString = "jdbc:h2:~/todolist.db;INIT=RUNSCRIPT from 'classpath:db/create.sql'";
         Sql2o sql2o = new Sql2o(connectionString, "", "");
         Sql2oTaskDao taskDao = new Sql2oTaskDao(sql2o);
+        Sql2oCategoryDao categoryDao = new Sql2oCategoryDao(sql2o);
 
 
         //get: delete all tasks
@@ -29,33 +32,38 @@ public class App {
 
 
         //get: show new task form
-        get("/tasks/new", (req, res) -> {
+        get("categories/:id/tasks/new", (req, res) -> {
             Map<String, Object> model = new HashMap<>();
+            int categoryId = Integer.parseInt(req.params("id"));
+            model.put("categoryId", categoryId);
             return new ModelAndView(model, "task-form.hbs");
         }, new HandlebarsTemplateEngine());
 
         //task: process new task form
-        post("/tasks/new", (request, response) -> { //URL to make new task on POST route
+        post("categories/:id/tasks/new", (request, response) -> { //URL to make new task on POST route
             Map<String, Object> model = new HashMap<>();
             String description = request.queryParams("description");
-
-            Task newTask = new Task(description, 1);
+            int categoryId = Integer.parseInt(request.params("id"));
+            Task newTask = new Task(description, categoryId);
             taskDao.add(newTask);
             model.put("task", newTask);
-            return new ModelAndView(model, "success.hbs");
-        }, new HandlebarsTemplateEngine());
+            response.redirect("/");
+            return null;
+        });
 
-        //get: show all tasks
+        //get: show all categories and tasks
         get("/", (req, res) -> {
             Map<String, Object> model = new HashMap<>();
             List<Task> tasks = taskDao.getAll();
+            List<Category> categories = categoryDao.getAll();
             model.put("tasks", tasks);
+            model.put("categories", categories);
 
             return new ModelAndView(model, "index.hbs");
         }, new HandlebarsTemplateEngine());
 
         //get: show an individual task
-        get("/tasks/:id", (req, res) -> {
+        get("categories/:categoryid/tasks/:id", (req, res) -> {
             Map<String, Object> model = new HashMap<>();
             int idOfTaskToFind = Integer.parseInt(req.params("id")); //pull id - must match route segment
             Task foundTask = taskDao.findById(idOfTaskToFind); //use it to find task
@@ -64,7 +72,7 @@ public class App {
         }, new HandlebarsTemplateEngine());
 
         //get: show a form to update a task
-        get("/tasks/update", (req, res) -> {
+        get("/tasks/:id/update", (req, res) -> {
             Map<String, Object> model = new HashMap<>();
             int idOfTaskToEdit = Integer.parseInt(req.params("id"));
             Task editTask = taskDao.findById(idOfTaskToEdit);
@@ -73,7 +81,7 @@ public class App {
         }, new HandlebarsTemplateEngine());
 
         //task: process a form to update a task
-        post("/tasks/update", (req, res) -> { //URL to make new task on POST route
+        post("/tasks/:id/update", (req, res) -> { //URL to make new task on POST route
             Map<String, Object> model = new HashMap<>();
             String newContent = req.queryParams("description");
             int idOfTaskToEdit = Integer.parseInt(req.params("id"));
@@ -90,7 +98,24 @@ public class App {
             return new ModelAndView(model, "success.hbs");
         }, new HandlebarsTemplateEngine());
 
+        //Categories
 
+        //get: show new category form
+        get("/categories/new", (req, res) -> {
+            Map<String, Object> model = new HashMap<>();
+            return new ModelAndView(model, "category-form.hbs");
+        }, new HandlebarsTemplateEngine());
+
+        //task: process new category form
+        post("/categories/new", (request, response) -> { //URL to make new task on POST route
+            Map<String, Object> model = new HashMap<>();
+            String name = request.queryParams("name");
+            Category newCategory = new Category(name);
+            categoryDao.add(newCategory);
+            model.put("task", newCategory);
+            response.redirect("/");
+            return null;
+        });
 
     }
 }
