@@ -14,7 +14,7 @@ public class Task {
         this.setDescription(description);
         this.completed = false;
         this.createdAt = LocalDateTime.now();
-        this.setCategoryId(getCategoryId());
+        this.categoryId = categoryId;
     }
 
 
@@ -32,20 +32,17 @@ public class Task {
         if (completed != task.completed) return false;
         if (id != task.id) return false;
         if (categoryId != task.categoryId) return false;
-        if (!description.equals(task.description)) return false;
-        return createdAt != null ? createdAt.equals(task.createdAt) : task.createdAt == null;
+        return description.equals(task.description);
     }
 
     @Override
     public int hashCode() {
         int result = description.hashCode();
         result = 31 * result + (completed ? 1 : 0);
-        result = 31 * result + (createdAt != null ? createdAt.hashCode() : 0);
         result = 31 * result + id;
         result = 31 * result + categoryId;
         return result;
     }
-
 
     public String getDescription() {
         return this.description;
@@ -74,4 +71,5 @@ public class Task {
     public void setCategoryId(int categoryId) {
         this.categoryId = categoryId;
     }
+
 }

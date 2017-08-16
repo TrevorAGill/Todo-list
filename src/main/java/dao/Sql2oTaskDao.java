@@ -22,11 +22,11 @@ public class Sql2oTaskDao implements TaskDao{
 
     @Override
     public void add(Task task) {
-        String sql = "INSERT INTO tasks (description) VALUES (:description)"; //raw sql
+        String sql = "INSERT INTO tasks (description, categoryId) VALUES (:description, :categoryId)"; //raw sql
         try(Connection con = sql2o.open()){ //try to open a connection
             int id = (int) con.createQuery(sql) //make a new variable
                     .addParameter("description", task.getDescription())
-//                    .addParameter("categoryId", task.getCategoryId())
+                    .addParameter("categoryId", task.getCategoryId())
                     .addColumnMapping("DESCRIPTION", "description")
                     .addColumnMapping("CATEGORYID", "categoryId")
                     .addColumnMapping("CREATEDAT", "createdAt")

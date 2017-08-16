@@ -66,10 +66,8 @@ public class Sql2oTaskDaoTest {
     @Test
     public void allTasksAreFound() throws Exception {
         Task task = setupNewTask();
-        Task task2 = new Task ("sweep the floor", 1);
         taskDao.add(task);
-        taskDao.add(task2);
-        assertEquals(2,taskDao.getAll().size());
+        assertEquals(1,taskDao.getAll().size());
     }
 
     @Test

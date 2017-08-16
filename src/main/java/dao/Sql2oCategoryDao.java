@@ -1,10 +1,12 @@
 package dao;
 
 import models.Category;
+import models.Task;
 import org.sql2o.Connection;
 import org.sql2o.Sql2o;
 import org.sql2o.Sql2oException;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Sql2oCategoryDao implements CategoryDao{
@@ -43,6 +45,15 @@ public class Sql2oCategoryDao implements CategoryDao{
             return con.createQuery("SELECT * FROM categories WHERE id = :id")
                     .addParameter("id", id) //key/value pair, key must match above
                     .executeAndFetchFirst(Category.class); //fetch an individual item
+        }
+    }
+
+    @Override
+    public List<Task> getAllTasksByCategory(int id) {
+        try(Connection con = sql2o.open()){
+            return con.createQuery("SELECT * FROM tasks WHERE id = :id")
+                    .addParameter("id", id) //key/value pair, key must match above
+                    .executeAndFetch(Task.class);
         }
     }
 

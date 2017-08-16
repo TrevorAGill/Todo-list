@@ -9,10 +9,11 @@ public class Category {
     private int id;
 
 
+
     public Category(String name) {
         this.name = name;
-
     }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -48,4 +49,5 @@ public class Category {
     public void setId(int id) {
         this.id = id;
     }
+
 }

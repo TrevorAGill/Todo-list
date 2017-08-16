@@ -16,7 +16,7 @@ public interface CategoryDao {
     List<Category> getAll();
 
     //get all tasks for specific category
-//    List<Task> getAllTasksByCategory(int categoryId);
+    List<Task> getAllTasksByCategory(int categoryId);
 
     //find category by id
     Category findById(int id);
